@@ -30,7 +30,7 @@ before_build:
 
 build:
     verbosity: minimal
-    project: AppVeyor.Playground.sln
+    project: AppVeyor.Playground/AppVeyor.Playground.sln
 
 after_build:
     nuget pack AppVeyor.Playground/Appveyor.Playground/AppVeyor.Playground.csproj -Build -Properties Configuration=Release -OutputDirectory .\artifacts -Exclude **\*.config -Verbosity detailed
