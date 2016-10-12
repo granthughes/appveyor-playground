@@ -26,14 +26,14 @@ before_build:
     # make sure the artifacts output folder is clear and restore NuGet packages before running MSBuild
     ps: >-
         if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse } else { mkdir artifacts } 
-        nuget restore AppVeyor.Playground.sln -verbosity detailed
+        nuget restore AppVeyor.Playground/AppVeyor.Playground.sln -verbosity detailed
 
 build:
     verbosity: minimal
     project: AppVeyor.Playground.sln
 
 after_build:
-    nuget pack Appveyor.Playground/AppVeyor.Playground.csproj -Build -Properties Configuration=Release -OutputDirectory .\artifacts -Exclude **\*.config -Verbosity detailed
+    nuget pack AppVeyor.Playground/Appveyor.Playground/AppVeyor.Playground.csproj -Build -Properties Configuration=Release -OutputDirectory .\artifacts -Exclude **\*.config -Verbosity detailed
 
 artifacts:
     path: .\artifacts\**\*.nupkg
