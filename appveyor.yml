@@ -8,6 +8,11 @@ nuget:
 
 configuration: Release
 
+install:
+    ps: >-
+        $assembly_version = & .\build\GetAssemblyVersion.ps1;
+        Update-AppveyorBuild -Version "1.0.$($env:APPVEYOR_BUILD_NUMBER).$($env:APPVEYOR_REPO_TAG)";
+
 assembly_info:
     patch: true
     file: '**\AssemblyInfo.*'
@@ -24,9 +29,6 @@ before_build:
 build:
     verbosity: minimal
     project: AppVeyor.Playground.sln
-    on:
-        branch: master
-        appveyor_repo_tag: true
 
 after_build:
     nuget pack Appveyor.Playground/AppVeyor.Playground.csproj -Build -Properties Configuration=Release -OutputDirectory .\artifacts -Exclude **\*.config -Verbosity detailed
