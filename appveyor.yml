@@ -1,0 +1,35 @@
+version: '{build}'
+
+pull_requests:
+    do_not_increment_build_number: true
+
+nuget:  
+    disable_publish_on_pr: true
+
+configuration: Release
+
+assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}-{APPVEYOR_REPO_COMMIT}'
+
+before_build:
+    # make sure the artifacts output folder is clear and restore NuGet packages before running MSBuild
+    ps: >-
+        if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse } else { mkdir artifacts } 
+        nuget restore AppVeyor.Playground.sln -verbosity detailed
+
+build:
+    verbosity: minimal
+    project: AppVeyor.Playground.sln
+    on:
+        branch: master
+        appveyor_repo_tag: true
+
+after_build:
+    nuget pack Appveyor.Playground/AppVeyor.Playground.csproj -Build -Properties Configuration=Release -OutputDirectory .\artifacts -Exclude **\*.config -Verbosity detailed
+
+artifacts:
+    path: .\artifacts\**\*.nupkg
