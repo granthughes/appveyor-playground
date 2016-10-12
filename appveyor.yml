@@ -10,8 +10,10 @@ configuration: Release
 
 install:
     ps: >-
-        $assembly_version = & .\build\GetAssemblyVersion.ps1;
-        Update-AppveyorBuild -Version "1.0.$($env:APPVEYOR_BUILD_NUMBER).$($env:APPVEYOR_REPO_TAG)";
+        if(	$env:APPVEYOR_REPO_TAG)	
+        Update-AppveyorBuild -Version "1.0.$($env:APPVEYOR_BUILD_NUMBER).0";
+        else
+        Update-AppveyorBuild -Version "1.0.0.$($env:APPVEYOR_BUILD_NUMBER)";
 
 assembly_info:
     patch: true
